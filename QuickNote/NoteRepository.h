@@ -9,9 +9,9 @@ class NoteRepository
 {
 public:
 	void save(Note* note);
+	vector<Note*>* findAll();
+
 	static NoteRepository* getInstance();
-
-
 	~NoteRepository();
 
 private:

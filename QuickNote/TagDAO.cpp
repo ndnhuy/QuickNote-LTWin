@@ -99,6 +99,45 @@ Tag* TagDAO::findById(int id) {
 	is.close();
 }
 
+vector<Tag*>* TagDAO::findAll()
+{
+	vector<Tag*>* tags = new vector<Tag*>();
+	ifstream is(DatabaseConfig::FILE_NAME_TAG);
+	if (is.is_open()) {
+		int id = 0;
+		string name = "";
+
+		string line;
+		while (getline(is, line)) {
+			if (line == "") {
+				Tag* tag = new Tag();
+				tag->setId(id);
+				tag->setName(name);
+
+				tags->push_back(tag);
+
+				id = 0;
+				name = "";
+
+				continue;
+			}
+
+			if (id == 0) {
+				id = stoi(line);
+				continue;
+			}
+
+			if (name == "") {
+				name = line;
+				continue;
+			}
+		}
+	}
+	is.close();
+
+	return tags;
+}
+
 int TagDAO::count() {
 	int count = 0;
 	ifstream is(DatabaseConfig::FILE_NAME_TAG);

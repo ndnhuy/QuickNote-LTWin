@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tag.h"
+#include "TagDAO.h"
 
 class TagRepository
 {
@@ -12,6 +13,8 @@ public:
 	TagRepository();
 	~TagRepository();
 private:
+	TagDAO *_tagDAO;
+
 	static TagRepository* _instance;
 };
 

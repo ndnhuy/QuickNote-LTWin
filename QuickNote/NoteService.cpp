@@ -12,6 +12,11 @@ NoteService* NoteService::getInstance() {
 	return _instance;
 }
 
+vector<Note*>* NoteService::findAll()
+{
+	return _noteRepository->findAll();
+}
+
 void NoteService::createNote(string content, string commaDelimitedTagNames) {
 	Note* note = new Note();
 	note->setContent(content);
@@ -25,15 +30,32 @@ void NoteService::createNote(string content, string commaDelimitedTagNames) {
 	note->setTags(tags);
 
 	_noteRepository->save(note);
+
+	// notify all registered observables
+	if (_observables != NULL) {
+		for (int i = 0; i < _observables->size(); i++) {
+			_observables->at(i)->notify();
+		}
+	}
+}
+
+void NoteService::registerObservable(Observable * o)
+{
+	_observables->push_back(o);
 }
 
 
 NoteService::NoteService()
 {
 	_noteRepository = NoteRepository::getInstance();
+	_observables = new vector<Observable*>();
 }
 
 
 NoteService::~NoteService()
 {
+	for (int i = 0; i < _observables->size(); i++) {
+		delete _observables->at(i);
+	}
+	_observables->clear();
 }

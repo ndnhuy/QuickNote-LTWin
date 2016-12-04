@@ -38,6 +38,45 @@ int NoteDAO::save(Note* note) {
 	return nextId;
 }
 
+vector<Note*>* NoteDAO::findAll()
+{
+	vector<Note*>* notes = new vector<Note*>();
+	ifstream is(DatabaseConfig::FILE_NAME_NOTE);
+	if (is.is_open()) {
+		int id = 0;
+		string content = "";
+
+		string line;
+		while (getline(is, line)) {
+			if (line == "") {
+				Note* note = new Note();
+				note->setId(id);
+				note->setContent(content);
+
+				notes->push_back(note);
+
+				id = 0;
+				content = "";
+
+				continue;
+			}
+
+			if (id == 0) {
+				id = stoi(line);
+				continue;
+			}
+
+			if (content == "") {
+				content = line;
+				continue;
+			}
+		}
+	}
+	is.close();
+
+	return notes;
+}
+
 NoteDAO::NoteDAO()
 {
 }

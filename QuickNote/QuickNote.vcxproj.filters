@@ -37,6 +37,12 @@
     <Filter Include="Source Files\config">
       <UniqueIdentifier>{7885ead8-e297-41b0-9751-9ffdc6bc5727}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\views">
+      <UniqueIdentifier>{64634cd5-16bf-4a29-89bf-eb6da15f62c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\view">
+      <UniqueIdentifier>{efe4efa9-9928-425d-93a4-e51e9de593dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -84,6 +90,21 @@
     <ClInclude Include="DatabaseConfig.h">
       <Filter>Header Files\config</Filter>
     </ClInclude>
+    <ClInclude Include="Observable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TagList.h">
+      <Filter>Header Files\views</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatingNoteObservable.h">
+      <Filter>Header Files\views</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteList.h">
+      <Filter>Header Files\views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -121,6 +142,21 @@
     </ClCompile>
     <ClCompile Include="DatabaseConfig.cpp">
       <Filter>Source Files\config</Filter>
+    </ClCompile>
+    <ClCompile Include="Observable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Observer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatingNoteObservable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TagList.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteList.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

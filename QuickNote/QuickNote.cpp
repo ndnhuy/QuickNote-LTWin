@@ -12,6 +12,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
+
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "ComCtl32.lib")
 #define MAX_LOADSTRING 100
@@ -20,6 +21,12 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
 void OnPaint(HWND hwnd);
 void OnDestroy(HWND hwnd);
 BOOL OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct);
+
+#include "NoteService.h"
+#include "StringUtils.h"
+
+WCHAR* getEnteredTextAsBuffer(HWND textboxHwnd, WCHAR* textboxName, bool emptyCheck);
+WCHAR* concat(WCHAR* source, WCHAR* dest);
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -172,12 +179,23 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
+
+
+#include "CreatingNoteObservable.h"
+#include "TagList.h"
+#include "NoteList.h"
+
 HWND txtNote;
 HWND txtTag;
 HWND lstNote;
 HWND lstTag;
 
-#include "NoteService.h"
+Observable* observable = new CreatingNoteObservable();
+Observer* tagList = new TagList(&lstTag);
+Observer* noteList = new NoteList(&lstNote);
+
+
+
 BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 {
 	INITCOMMONCONTROLSEX icc;
@@ -198,15 +216,19 @@ BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 	HWND hwnd = CreateWindowEx(0, L"STATIC", L"Note", WS_CHILD | WS_VISIBLE | SS_LEFT, 220, 10, 100, 20, hWnd, NULL, hInst, NULL);
 	SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
 
-	txtNote = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 250, 10, 100, 20, hWnd, NULL, hInst, NULL);
+	txtNote = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 250, 10, 300, 20, hWnd, NULL, hInst, NULL);
 	SendMessage(txtNote, WM_SETFONT, WPARAM(hFont), TRUE);
+
+	SendMessage(txtNote, EM_LIMITTEXT, (WPARAM)0, 0);
 	
 	// Tag
 	hwnd = CreateWindowEx(0, L"STATIC", L"Tags", WS_CHILD | WS_VISIBLE | SS_LEFT, 220, 40, 100, 20, hWnd, NULL, hInst, NULL);
 	SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
 
-	txtTag = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 250, 40, 100, 20, hWnd, NULL, hInst, NULL);
-	SendMessage(txtNote, WM_SETFONT, WPARAM(hFont), TRUE);
+	txtTag = CreateWindowEx(0, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 250, 40, 300, 20, hWnd, NULL, hInst, NULL);
+	SendMessage(txtTag, WM_SETFONT, WPARAM(hFont), TRUE);
+
+	SendMessage(txtTag, EM_LIMITTEXT, 0, 0);
 
 	// List of tags
 	lstTag = CreateWindowEx(0, WC_TREEVIEW, _T("Tree View"),
@@ -251,12 +273,70 @@ BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 	lv.pszText = L"HAHA";
 	ListView_InsertItem(lstNote, &lv);
 
+	// save button
+	hwnd = CreateWindowEx(0, L"BUTTON", L"Save", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 220, 200, 60, 40, hWnd, (HMENU)IDC_BUTTON_SAVE, hInst, NULL);
+	SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
+
+
+	observable->attach(tagList);
+	observable->attach(noteList);
+	NoteService::getInstance()->registerObservable(observable);
+
 	return true;
 }
 
 void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
+	WCHAR* bufferNote = NULL;
+	WCHAR* bufferTag = NULL;
+	switch (id) {
+		case IDC_BUTTON_SAVE: {
+		
+			bufferNote = getEnteredTextAsBuffer(txtNote, L"note", true);
+			if (bufferNote == NULL) {
+				return;
+			}
 
+			bufferTag = getEnteredTextAsBuffer(txtTag, L"tag", false);
+			if (bufferTag == NULL) {
+				return;
+			}
+
+			NoteService::getInstance()->createNote(StringUtils::toString(bufferNote), 
+												   StringUtils::toString(bufferTag));
+
+			break;
+		}
+	}
+
+	if (!bufferNote) {
+		delete[] bufferNote;
+	}
+
+	if (!bufferTag) {
+		delete[] bufferTag;
+	}
+}
+
+WCHAR* getEnteredTextAsBuffer(HWND textboxHwnd, WCHAR* textboxName, bool emptyCheck) {
+	int textLength = GetWindowTextLength(textboxHwnd);
+	if (emptyCheck && textLength == 0) {
+		MessageBox(textboxHwnd, concat(L"Please enter ", textboxName), L"Error", MB_OK);
+		return NULL;
+	}
+	WCHAR* buffer = new WCHAR[textLength + 1];
+	GetWindowText(textboxHwnd, buffer, textLength + 1);
+
+	return buffer;
+}
+
+WCHAR* concat(WCHAR* source, WCHAR* dest) {
+	int bufferSize = wcsnlen_s(source, INT_MAX) + wcsnlen_s(dest, INT_MAX) + 1;
+	WCHAR* result = new WCHAR[bufferSize];
+	wcscpy_s(result, bufferSize, source);
+	wcscat_s(result, bufferSize, dest);
+
+	return result;
 }
 
 void OnPaint(HWND hWnd)

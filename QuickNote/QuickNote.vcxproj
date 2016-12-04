@@ -145,11 +145,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CreatingNoteObservable.h" />
     <ClInclude Include="DatabaseConfig.h" />
     <ClInclude Include="Note.h" />
     <ClInclude Include="NoteDAO.h" />
+    <ClInclude Include="NoteList.h" />
     <ClInclude Include="NoteService.h" />
     <ClInclude Include="NoteTagDAO.h" />
+    <ClInclude Include="Observable.h" />
+    <ClInclude Include="Observer.h" />
     <ClInclude Include="QuickNote.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -157,15 +161,20 @@
     <ClInclude Include="Tag.h" />
     <ClInclude Include="NoteRepository.h" />
     <ClInclude Include="TagDAO.h" />
+    <ClInclude Include="TagList.h" />
     <ClInclude Include="TagRepository.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CreatingNoteObservable.cpp" />
     <ClCompile Include="DatabaseConfig.cpp" />
     <ClCompile Include="Note.cpp" />
     <ClCompile Include="NoteDAO.cpp" />
+    <ClCompile Include="NoteList.cpp" />
     <ClCompile Include="NoteService.cpp" />
     <ClCompile Include="NoteTagDAO.cpp" />
+    <ClCompile Include="Observable.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="QuickNote.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -177,6 +186,7 @@
     <ClCompile Include="Tag.cpp" />
     <ClCompile Include="NoteRepository.cpp" />
     <ClCompile Include="TagDAO.cpp" />
+    <ClCompile Include="TagList.cpp" />
     <ClCompile Include="TagRepository.cpp" />
   </ItemGroup>
   <ItemGroup>

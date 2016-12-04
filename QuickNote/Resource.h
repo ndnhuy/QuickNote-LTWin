@@ -15,6 +15,7 @@
 #define IDC_QUICKNOTE			109
 #define IDC_LIST_NOTE			110
 #define IDC_LIST_TAG			111
+#define IDC_BUTTON_SAVE			112
 #define IDC_MYICON				2
 #ifndef IDC_STATIC
 #define IDC_STATIC				-1

@@ -25,6 +25,25 @@ vector<string> StringUtils::delimitedStringToVector(string str, char delimited) 
 	return strings;
 }
 
+string StringUtils::toString(WCHAR * wchar)
+{
+	wstring ws(wchar);
+	string str(ws.begin(), ws.end());
+	return str;
+}
+
+WCHAR * StringUtils::toWCHAR(string str)
+{
+
+	wstring wideStr = wstring(str.begin(), str.end());
+	WCHAR* w = (WCHAR*)wideStr.c_str();
+	
+	int length = str.length() + 1;
+	WCHAR* wchar = new WCHAR[length];
+	wcscpy_s(wchar, length, w);
+	return wchar;
+}
+
 StringUtils::StringUtils()
 {
 }

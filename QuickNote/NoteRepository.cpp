@@ -13,6 +13,11 @@ void NoteRepository::save(Note* note) {
 	}
 }
 
+vector<Note*>* NoteRepository::findAll()
+{
+	return _noteDAO->findAll();
+}
+
 NoteRepository* NoteRepository::getInstance() {
 	if (!_instance) {
 		_instance = new NoteRepository();

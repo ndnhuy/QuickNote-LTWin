@@ -6,6 +6,7 @@ public:
 	Tag* saveOrGetIfExist(Tag* tag);
 	int count();
 	Tag* findById(int id);
+	vector<Tag*>* findAll();
 
 	static TagDAO* getInstance();
 	

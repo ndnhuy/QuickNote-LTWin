@@ -4,8 +4,7 @@
 TagRepository*	TagRepository::_instance;
 
 vector<Tag*>* TagRepository::findAll() {
-	// call DAO to get all tag
-	return NULL;
+	return _tagDAO->findAll();
 }
 
 
@@ -19,6 +18,7 @@ TagRepository* TagRepository::getInstance() {
 
 TagRepository::TagRepository()
 {
+	_tagDAO = TagDAO::getInstance();
 }
 
 
