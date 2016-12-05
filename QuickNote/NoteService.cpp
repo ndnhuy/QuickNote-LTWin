@@ -17,6 +17,11 @@ vector<Note*>* NoteService::findAll()
 	return _noteRepository->findAll();
 }
 
+vector<Note*>* NoteService::findByTagName(string tagName)
+{
+	return nullptr;
+}
+
 void NoteService::createNote(string content, string commaDelimitedTagNames) {
 	Note* note = new Note();
 	note->setContent(content);

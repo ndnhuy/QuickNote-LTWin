@@ -21,12 +21,14 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
 void OnPaint(HWND hwnd);
 void OnDestroy(HWND hwnd);
 BOOL OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct);
+LRESULT OnNotify(HWND hwnd, int idFrom, NMHDR *pnm);
 
 #include "NoteService.h"
 #include "StringUtils.h"
 
 WCHAR* getEnteredTextAsBuffer(HWND textboxHwnd, WCHAR* textboxName, bool emptyCheck);
 WCHAR* concat(WCHAR* source, WCHAR* dest);
+void init();
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -151,6 +153,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		HANDLE_MSG(hWnd, WM_COMMAND, OnCommand);
 		HANDLE_MSG(hWnd, WM_PAINT, OnPaint);
 		HANDLE_MSG(hWnd, WM_DESTROY, OnDestroy);
+		HANDLE_MSG(hWnd, WM_NOTIFY, OnNotify);
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -190,11 +193,9 @@ HWND txtTag;
 HWND lstNote;
 HWND lstTag;
 
-Observable* observable = new CreatingNoteObservable();
-Observer* tagList = new TagList(&lstTag);
-Observer* noteList = new NoteList(&lstNote);
-
-
+CreatingNoteObservable* observable = new CreatingNoteObservable();
+TagList* tagList = new TagList(&lstTag);
+NoteList* noteList = new NoteList(&lstNote);
 
 BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 {
@@ -278,11 +279,18 @@ BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 	SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
 
 
+	init();
+
+	return true;
+}
+
+void init() {
 	observable->attach(tagList);
 	observable->attach(noteList);
 	NoteService::getInstance()->registerObservable(observable);
 
-	return true;
+	tagList->update();
+	noteList->update();
 }
 
 void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
@@ -337,6 +345,17 @@ WCHAR* concat(WCHAR* source, WCHAR* dest) {
 	wcscat_s(result, bufferSize, dest);
 
 	return result;
+}
+
+LRESULT OnNotify(HWND hwnd, int idFrom, NMHDR *pnm)
+{
+	switch (pnm->code) {
+		case TVN_SELCHANGED:
+			
+			break;
+	}
+
+	return 0;
 }
 
 void OnPaint(HWND hWnd)

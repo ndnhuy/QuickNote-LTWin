@@ -149,14 +149,14 @@
     <ClCompile Include="Observer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CreatingNoteObservable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TagList.cpp">
       <Filter>Source Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="CreatingNoteObservable.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
     <ClCompile Include="NoteList.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\view</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

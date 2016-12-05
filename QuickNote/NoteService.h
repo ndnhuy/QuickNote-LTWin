@@ -10,6 +10,7 @@ class NoteService
 {
 public:
 	vector<Note*>* findAll();
+	vector<Note*>* findByTagName(string tagName);
 	void createNote(string content, string commaDelimitedTagNames);
 	void registerObservable(Observable* o);
 

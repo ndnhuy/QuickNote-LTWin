@@ -154,6 +154,46 @@ int TagDAO::count() {
 	return count;
 }
 
+Tag * TagDAO::findByName(string name)
+{
+	ifstream is(DatabaseConfig::FILE_NAME_TAG);
+	if (is.is_open()) {
+		int id = 0;
+		string tmpName = "";
+
+		string line;
+		while (getline(is, line)) {
+			if (line == "") {
+				if (tmpName == name) {
+					Tag* tag = new Tag();
+					tag->setId(id);
+					tag->setName(tmpName);
+
+					return tag;
+				}
+			
+				id = 0;
+				tmpName = "";
+
+				continue;
+			}
+
+			if (id == 0) {
+				id = stoi(line);
+				continue;
+			}
+
+			if (tmpName == "") {
+				tmpName = line;
+				continue;
+			}
+		}
+	}
+	is.close();
+
+	return new Tag();
+}
+
 TagDAO::TagDAO()
 {
 }

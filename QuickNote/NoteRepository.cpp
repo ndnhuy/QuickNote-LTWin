@@ -18,6 +18,16 @@ vector<Note*>* NoteRepository::findAll()
 	return _noteDAO->findAll();
 }
 
+vector<Note*>* NoteRepository::findByTagName(string tagName)
+{
+	Tag* tag = _tagDAO->findByName(tagName);
+	vector<int>* noteIDs = _noteTagDAO->findNoteIDsByTagId(tag->getId());
+	vector<Note*>* notes = new vector<Note*>();
+	for (int i = 0; i < noteIDs->size(); i++) {
+		notes->push_back( _noteDAO->findById(noteIDs->at(i)) );
+	}
+}
+
 NoteRepository* NoteRepository::getInstance() {
 	if (!_instance) {
 		_instance = new NoteRepository();

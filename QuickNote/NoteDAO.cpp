@@ -77,6 +77,11 @@ vector<Note*>* NoteDAO::findAll()
 	return notes;
 }
 
+vector<Note*>* NoteDAO::findByTagName(string tagName)
+{
+
+}
+
 NoteDAO::NoteDAO()
 {
 }

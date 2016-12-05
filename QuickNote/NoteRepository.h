@@ -10,6 +10,7 @@ class NoteRepository
 public:
 	void save(Note* note);
 	vector<Note*>* findAll();
+	vector<Note*>* findByTagName(string tagName);
 
 	static NoteRepository* getInstance();
 	~NoteRepository();
