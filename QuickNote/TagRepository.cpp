@@ -25,11 +25,12 @@ vector<Tag*>* TagRepository::findTagByNameLikeAndSortByFrequency(string name)
 		}
 	}
 
-	for (int i = 0; i < tags->size(); i++) {
-		OutputDebugString(StringUtils::toWCHAR(tags->at(i)->getName() + "\n"));
-	}
-
 	return tags;
+}
+
+int TagRepository::countNoteByTag(int tagId)
+{
+	return _noteTagDAO->findNoteIDsByTagId(tagId)->size();
 }
 
 

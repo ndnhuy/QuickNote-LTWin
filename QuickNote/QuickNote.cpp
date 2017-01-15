@@ -321,6 +321,8 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 			NoteService::getInstance()->createNote(StringUtils::toString(bufferNote), 
 												   StringUtils::toString(bufferTag));
 
+			InvalidateRect(hwnd, NULL, TRUE);
+
 			break;
 		}
 	}
@@ -445,35 +447,59 @@ void OnPaint(HWND hWnd)
 	// sample data
 	int data[] = { 100, 200, 300, 500 };
 
+	vector<Tag*>* tags = TagRepository::getInstance()->findAll();
+
 	int startY = 10;
-	int height = 800;
-	int totalNotes = 1100;
+	int height = 400;
+
+	int totalNotes = 0;
+	for (int i = 0; i < tags->size(); i++) {
+		totalNotes += TagRepository::getInstance()->countNoteByTag(tags->at(i)->getId());
+	}
 
 	int startYDesc = 10;
 	int endYDesc = 30;
-	for (int i = 0; i < 4; i++) {
+	int noteCountLevel = 0;
+
+	TextOut(hdc,
+		710,
+		startY - 5,
+		L"0",
+		wcslen(L"0"));
+
+	for (int i = 0; i < tags->size(); i++) {
+		int numberOfNotes = TagRepository::getInstance()->countNoteByTag(tags->at(i)->getId());
+
 		TagRGB rgb = toRGB(colors[i]);
 
-		int endY = (height * data[i]) / totalNotes;
-		HRGN hRegion = CreateRectRgn(600, startY, 700, endY) ;
+		int h = (height * numberOfNotes) / totalNotes;
+		HRGN hRegion = CreateRectRgn(600, startY, 700, startY + h) ;
 		HBRUSH hBrush = CreateSolidBrush(RGB(rgb.r, rgb.g, rgb.b));
 		FillRgn(hdc, hRegion, hBrush);
 
-		startY = endY;
-		HWND hwnd = CreateWindowEx(0, L"STATIC", StringUtils::toWCHAR(to_string(data[i])), WS_CHILD | WS_VISIBLE | SS_LEFT, 
-			710, startY - 5, 50, 15, hWnd, NULL, hInst, NULL);
-		SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
+		startY += h;
 
-		// start at 50 from the left => 700 + 50
+		WCHAR* buffer = StringUtils::toWCHAR(to_string(noteCountLevel + numberOfNotes));
+		TextOut(hdc, 
+			710, 
+			startY - 5, 
+			buffer,
+			wcslen(buffer));
+
+		noteCountLevel += numberOfNotes;
 
 		FillRgn(
 			hdc,
 			CreateRectRgn(800, startYDesc, 830, endYDesc),
 			CreateSolidBrush(RGB(rgb.r, rgb.g, rgb.b))
 		);
-		hwnd = CreateWindowEx(0, L"STATIC", L"Tag name", WS_CHILD | WS_VISIBLE | SS_LEFT,
-			850, startYDesc + 2, 100, 15, hWnd, NULL, hInst, NULL);
-		SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
+
+		WCHAR* bufferTagName = StringUtils::toWCHAR(tags->at(i)->getName());
+		TextOut(hdc,
+			850,
+			startYDesc + 2,
+			bufferTagName,
+			wcslen(bufferTagName));
 
 		startYDesc = endYDesc + 10;
 		endYDesc += 30;
@@ -487,6 +513,14 @@ void OnDestroy(HWND hwnd)
 	PostQuitMessage(0);
 }
 
+int GetTextSize(LPSTR a0)
+{
+	for (int iLoopCounter = 0; ; iLoopCounter++)
+	{
+		if (a0[iLoopCounter] == '\0')
+			return iLoopCounter;
+	}
+}
 string colors[] = {
 	"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
 	"#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",

@@ -9,6 +9,7 @@ class TagRepository
 public:
 	vector<Tag*>* findAll();
 	vector<Tag*>* findTagByNameLikeAndSortByFrequency(string name);
+	int countNoteByTag(int tagId);
 	static TagRepository* getInstance();
 
 	~TagRepository();
