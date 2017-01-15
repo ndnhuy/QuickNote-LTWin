@@ -1,12 +1,12 @@
 #pragma once
 #include "Observer.h"
 #include "TagRepository.h"
-class TagList : public Observer
+class TagListController : public Observer
 {
 public:
 	void update();
-	TagList(HWND*);
-	~TagList();
+	TagListController(HWND*);
+	~TagListController();
 
 private:
 	HWND* _hwnd;

@@ -27,3 +27,5 @@ private:
 	vector<Note*> *_notes;
 };
 
+
+

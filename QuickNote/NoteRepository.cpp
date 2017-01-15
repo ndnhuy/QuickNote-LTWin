@@ -26,6 +26,7 @@ vector<Note*>* NoteRepository::findByTagName(string tagName)
 	for (int i = 0; i < noteIDs->size(); i++) {
 		notes->push_back( _noteDAO->findById(noteIDs->at(i)) );
 	}
+	return notes;
 }
 
 NoteRepository* NoteRepository::getInstance() {

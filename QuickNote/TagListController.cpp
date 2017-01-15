@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "TagList.h"
+#include "TagListController.h"
 #include <commctrl.h>
 #include <windowsX.h>
 #include <winuser.h>
 #include "StringUtils.h"
-void TagList::update() {
+void TagListController::update() {
 
 	vector<Tag*> *tags = _tagRepository->findAll();
 	TreeView_DeleteAllItems(*_hwnd);
@@ -16,11 +16,12 @@ void TagList::update() {
 		tv.item.iImage = NULL;
 		tv.item.iSelectedImage = NULL;
 		tv.item.pszText = StringUtils::toWCHAR(tags->at(i)->getName());
+		tv.item.lParam = (LPARAM)StringUtils::toWCHAR(tags->at(i)->getName());
 		TreeView_InsertItem(*_hwnd, &tv);
 	}
 }
 
-TagList::TagList(HWND *hwnd)
+TagListController::TagListController(HWND *hwnd)
 {
 	_hwnd = hwnd;
 	_tagRepository = TagRepository::getInstance();
@@ -28,6 +29,6 @@ TagList::TagList(HWND *hwnd)
 
 
 
-TagList::~TagList()
+TagListController::~TagListController()
 {
 }

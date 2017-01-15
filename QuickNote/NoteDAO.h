@@ -7,7 +7,7 @@ class NoteDAO
 public:
 	int save(Note* note);
 	vector<Note*>* findAll();
-	vector<Note*>* findByTagName(string tagName);
+	Note* findById(int id);
 
 	static NoteDAO* getInstance();
 

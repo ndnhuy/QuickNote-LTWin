@@ -11,7 +11,6 @@ void NoteTagDAO::save(int noteId, int tagId) {
 	ofstream os(DatabaseConfig::FILE_NAME_NOTETAG, ios::app);
 	if (os.is_open()) {
 		os << noteId << " " << tagId << endl;
-		os << endl;
 	}
 	os.close();
 }
@@ -30,6 +29,9 @@ vector<int>* NoteTagDAO::findNoteIDsByTagId(int tagId)
 			}
 		}
 	}
+	is.close();
+
+	return IDs;
 }
 
 NoteTagDAO* NoteTagDAO::getInstance() {

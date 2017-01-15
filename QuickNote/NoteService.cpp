@@ -19,7 +19,10 @@ vector<Note*>* NoteService::findAll()
 
 vector<Note*>* NoteService::findByTagName(string tagName)
 {
-	return nullptr;
+	if (tagName == "") {
+		return findAll();
+	}
+	return _noteRepository->findByTagName(tagName);
 }
 
 void NoteService::createNote(string content, string commaDelimitedTagNames) {

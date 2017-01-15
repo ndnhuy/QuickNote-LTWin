@@ -96,13 +96,13 @@
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TagList.h">
-      <Filter>Header Files\views</Filter>
-    </ClInclude>
     <ClInclude Include="CreatingNoteObservable.h">
       <Filter>Header Files\views</Filter>
     </ClInclude>
-    <ClInclude Include="NoteList.h">
+    <ClInclude Include="TagListController.h">
+      <Filter>Header Files\views</Filter>
+    </ClInclude>
+    <ClInclude Include="NoteListController.h">
       <Filter>Header Files\views</Filter>
     </ClInclude>
   </ItemGroup>
@@ -149,13 +149,13 @@
     <ClCompile Include="Observer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TagList.cpp">
-      <Filter>Source Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="CreatingNoteObservable.cpp">
       <Filter>Source Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="NoteList.cpp">
+    <ClCompile Include="TagListController.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="NoteListController.cpp">
       <Filter>Source Files\view</Filter>
     </ClCompile>
   </ItemGroup>

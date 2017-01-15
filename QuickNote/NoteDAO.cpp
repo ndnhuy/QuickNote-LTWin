@@ -77,9 +77,42 @@ vector<Note*>* NoteDAO::findAll()
 	return notes;
 }
 
-vector<Note*>* NoteDAO::findByTagName(string tagName)
+Note * NoteDAO::findById(int id)
 {
+	ifstream is(DatabaseConfig::FILE_NAME_NOTE);
+	if (is.is_open()) {
+		int tmpId = 0;
+		string content = "";
 
+		string line;
+		while (getline(is, line)) {
+			if (line == "") {
+				if (tmpId == id) {
+					Note* note = new Note();
+					note->setId(tmpId);
+					note->setContent(content);
+
+					return note;
+				}
+
+				tmpId = 0;
+				content = "";
+
+				continue;
+			}
+
+			if (tmpId == 0) {
+				tmpId = stoi(line);
+				continue;
+			}
+
+			if (content == "") {
+				content = line;
+				continue;
+			}
+		}
+	}
+	is.close();
 }
 
 NoteDAO::NoteDAO()
