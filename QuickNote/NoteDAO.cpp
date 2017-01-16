@@ -2,6 +2,7 @@
 #include "NoteDAO.h"
 #include <fstream>
 #include "DatabaseConfig.h"
+#include "StringUtils.h"
 
 NoteDAO* NoteDAO::_instance;
 
@@ -27,7 +28,7 @@ int NoteDAO::save(Note* note) {
 	is.close();
 
 	int nextId = count + 1;
-	ofstream os(DatabaseConfig::FILE_NAME_NOTE, ios::app);
+	ofstream os(DatabaseConfig::FILE_NAME_NOTE, ios::app | ios::binary);
 	if (os.is_open()) {
 		os << nextId << endl;
 		os << note->getContent() << endl;

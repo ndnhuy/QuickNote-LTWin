@@ -270,13 +270,6 @@ BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 	lvCol.pszText = _T("Notes");
 	ListView_InsertColumn(lstNote, 0, &lvCol);
 
-	//LV_ITEM lv;
-	//lv.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
-	//lv.iItem = 0;
-	//lv.iSubItem = 0;
-	//lv.pszText = L"HAHA";
-	//ListView_InsertItem(lstNote, &lv);
-
 	// save button
 	hwnd = CreateWindowEx(0, L"BUTTON", L"Save", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 250, 270, 60, 40, hWnd, (HMENU)IDC_BUTTON_SAVE, hInst, NULL);
 	SendMessage(hwnd, WM_SETFONT, WPARAM(hFont), TRUE);
@@ -290,6 +283,7 @@ BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 CreatingNoteObservable* observable = new CreatingNoteObservable();
 TagListController* tagList = new TagListController(&lstTag);
 NoteListController* noteList = new NoteListController(&lstNote);
+int totalNotes = 0;
 void init() {
 	observable->attach(tagList);
 	observable->attach(noteList);
@@ -299,6 +293,11 @@ void init() {
 	noteList->update();
 
 	updateSuggestedTags("");
+
+	vector<Tag*>* tags = TagRepository::getInstance()->findAll();
+	for (int i = 0; i < tags->size(); i++) {
+		totalNotes += TagRepository::getInstance()->countNoteByTag(tags->at(i)->getId());
+	}
 }
 
 void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
@@ -321,6 +320,7 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 			NoteService::getInstance()->createNote(StringUtils::toString(bufferNote), 
 												   StringUtils::toString(bufferTag));
 
+			totalNotes++;
 			InvalidateRect(hwnd, NULL, TRUE);
 
 			break;
@@ -438,24 +438,17 @@ TagRGB toRGB(string hex) {
 }
 
 string colors[];
+
 void OnPaint(HWND hWnd)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
 	hdc = BeginPaint(hWnd, &ps);
-	
-	// sample data
-	int data[] = { 100, 200, 300, 500 };
 
 	vector<Tag*>* tags = TagRepository::getInstance()->findAll();
 
 	int startY = 10;
-	int height = 400;
-
-	int totalNotes = 0;
-	for (int i = 0; i < tags->size(); i++) {
-		totalNotes += TagRepository::getInstance()->countNoteByTag(tags->at(i)->getId());
-	}
+	int height = 600;
 
 	int startYDesc = 10;
 	int endYDesc = 30;

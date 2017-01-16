@@ -51,7 +51,7 @@ Tag* TagDAO::saveOrGetIfExist(Tag* tag) {
 	is.close();
 
 	int nextId = count() + 1;
-	ofstream os(DatabaseConfig::FILE_NAME_TAG, ios::app);
+	ofstream os(DatabaseConfig::FILE_NAME_TAG, ios::app | ios::binary);
 	if (os.is_open()) {
 		os << nextId << endl;
 		os << tag->getName() << endl;
