@@ -2,6 +2,7 @@
 #include "NoteService.h"
 #include "StringUtils.h"
 #include "NoteRepository.h"
+#include "TagRepository.h"
 
 NoteService*	NoteService::_instance;
 NoteService* NoteService::getInstance() {
@@ -45,6 +46,9 @@ void NoteService::createNote(string content, string commaDelimitedTagNames) {
 			_observables->at(i)->notify();
 		}
 	}
+
+	// update cached
+	_cachedSumNotes = _noteTagDAO->count();
 }
 
 void NoteService::registerObservable(Observable * o)
@@ -52,11 +56,17 @@ void NoteService::registerObservable(Observable * o)
 	_observables->push_back(o);
 }
 
+int NoteService::getSumOfNotesForEachTag()
+{
+	return _cachedSumNotes;
+}
 
 NoteService::NoteService()
 {
 	_noteRepository = NoteRepository::getInstance();
 	_observables = new vector<Observable*>();
+	_noteTagDAO = NoteTagDAO::getInstance();
+	_cachedSumNotes = _noteTagDAO->count();
 }
 
 

@@ -124,7 +124,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    //WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, 800, 500, nullptr, nullptr, hInstance, nullptr);
+      CW_USEDEFAULT, 0, 1000, 500, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -283,7 +283,6 @@ BOOL OnCreate(HWND hWnd, LPCREATESTRUCT lpCreateStruct)
 CreatingNoteObservable* observable = new CreatingNoteObservable();
 TagListController* tagList = new TagListController(&lstTag);
 NoteListController* noteList = new NoteListController(&lstNote);
-int totalNotes = 0;
 void init() {
 	observable->attach(tagList);
 	observable->attach(noteList);
@@ -294,12 +293,13 @@ void init() {
 
 	updateSuggestedTags("");
 
+	int totalNotes = 0;
 	vector<Tag*>* tags = TagRepository::getInstance()->findAll();
 	for (int i = 0; i < tags->size(); i++) {
 		totalNotes += TagRepository::getInstance()->countNoteByTag(tags->at(i)->getId());
 	}
 }
-
+vector<Tag*>* globalTags = TagRepository::getInstance()->findAll();
 void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
 	WCHAR* bufferNote = NULL;
@@ -319,8 +319,8 @@ void OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 
 			NoteService::getInstance()->createNote(StringUtils::toString(bufferNote), 
 												   StringUtils::toString(bufferTag));
+			globalTags = TagRepository::getInstance()->findAll();
 
-			totalNotes++;
 			InvalidateRect(hwnd, NULL, TRUE);
 
 			break;
@@ -445,10 +445,8 @@ void OnPaint(HWND hWnd)
 	HDC hdc;
 	hdc = BeginPaint(hWnd, &ps);
 
-	vector<Tag*>* tags = TagRepository::getInstance()->findAll();
-
 	int startY = 10;
-	int height = 600;
+	int height = 400;
 
 	int startYDesc = 10;
 	int endYDesc = 30;
@@ -460,12 +458,12 @@ void OnPaint(HWND hWnd)
 		L"0",
 		wcslen(L"0"));
 
-	for (int i = 0; i < tags->size(); i++) {
-		int numberOfNotes = TagRepository::getInstance()->countNoteByTag(tags->at(i)->getId());
+	for (int i = 0; i < globalTags->size(); i++) {
+		int numberOfNotes = TagRepository::getInstance()->countNoteByTag(globalTags->at(i)->getId());
 
 		TagRGB rgb = toRGB(colors[i]);
 
-		int h = (height * numberOfNotes) / totalNotes;
+		int h = (height * numberOfNotes) / NoteService::getInstance()->getSumOfNotesForEachTag();
 		HRGN hRegion = CreateRectRgn(600, startY, 700, startY + h) ;
 		HBRUSH hBrush = CreateSolidBrush(RGB(rgb.r, rgb.g, rgb.b));
 		FillRgn(hdc, hRegion, hBrush);
@@ -487,7 +485,7 @@ void OnPaint(HWND hWnd)
 			CreateSolidBrush(RGB(rgb.r, rgb.g, rgb.b))
 		);
 
-		WCHAR* bufferTagName = StringUtils::toWCHAR(tags->at(i)->getName());
+		WCHAR* bufferTagName = StringUtils::toWCHAR(globalTags->at(i)->getName());
 		TextOut(hdc,
 			850,
 			startYDesc + 2,

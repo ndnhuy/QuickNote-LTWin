@@ -34,6 +34,7 @@ int NoteDAO::save(Note* note) {
 		os << note->getContent() << endl;
 		os << endl;
 	}
+
 	os.close();
 
 	return nextId;

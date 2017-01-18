@@ -34,6 +34,21 @@ vector<int>* NoteTagDAO::findNoteIDsByTagId(int tagId)
 	return IDs;
 }
 
+int NoteTagDAO::count()
+{
+	int count = 0;
+	ifstream is(DatabaseConfig::FILE_NAME_NOTETAG);
+	string line;
+	if (is.is_open()) {
+		while (getline(is, line)) {
+			count++;
+		}
+	}
+	is.close();
+
+	return count;
+}
+
 NoteTagDAO* NoteTagDAO::getInstance() {
 	if (!_instance) {
 		_instance = new NoteTagDAO();

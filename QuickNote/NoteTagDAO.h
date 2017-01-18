@@ -6,7 +6,7 @@ class NoteTagDAO
 public:
 	void save(int noteId, int tagId);
 	vector<int>* findNoteIDsByTagId(int tagId);
-
+	int count();
 	static NoteTagDAO* getInstance();
 	
 	
